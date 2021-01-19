@@ -1,0 +1,97 @@
+<div class="card">
+  <div class="card-header bg-dark text-white">
+    Seleccione El Horario Deseado
+  </div>
+  <div class="card-body">
+    <div class="table-responsive">
+      <table class="table table-bordered">
+        <tbody class="bg-info text-white">
+          <tr>
+            <td
+              *ngFor="let horario of horarios | slice: 0:5"
+              (click)="seleccionarHorario(horario)"
+              [class]="
+                horario.seleccionado
+                  ? 'bg-success'
+                  : horario.contadorReservaciones === 8
+                  ? 'bg-danger cursor-normal'
+                  : ''
+              "
+            >
+              Hora: {{ horario.hora }} <br />
+              Reservaciones: {{ horario.contadorReservaciones }}
+            </td>
+          </tr>
+
+          <tr>
+            <td
+              *ngFor="let horario of horarios | slice: 5:10"
+              (click)="seleccionarHorario(horario)"
+              [class]="
+                horario.seleccionado
+                  ? 'bg-success'
+                  : horario.contadorReservaciones === 8
+                  ? 'bg-danger cursor-normal'
+                  : ''
+              "
+            >
+              Hora: {{ horario.hora }} <br />
+              Reservaciones: {{ horario.contadorReservaciones }}
+            </td>
+          </tr>
+
+          <tr>
+            <td
+              *ngFor="let horario of horarios | slice: 10:15"
+              (click)="seleccionarHorario(horario)"
+              [class]="
+                horario.seleccionado
+                  ? 'bg-success'
+                  : horario.contadorReservaciones === 8
+                  ? 'bg-danger cursor-normal'
+                  : ''
+              "
+            >
+              Hora: {{ horario.hora }} <br />
+              Reservaciones: {{ horario.contadorReservaciones }}
+            </td>
+          </tr>
+
+          <tr>
+            <td
+              *ngFor="let horario of horarios | slice: 15:20"
+              (click)="seleccionarHorario(horario)"
+              [class]="
+                horario.seleccionado
+                  ? 'bg-success'
+                  : horario.contadorReservaciones === 8
+                  ? 'bg-danger cursor-normal'
+                  : ''
+              "
+            >
+              Hora: {{ horario.hora }} <br />
+              Reservaciones: {{ horario.contadorReservaciones }}
+            </td>
+          </tr>
+
+          <tr>
+            <td
+              *ngFor="let horario of horarios | slice: 20:25"
+              (click)="seleccionarHorario(horario)"
+              [class]="
+                horario.seleccionado
+                  ? 'bg-success'
+                  : horario.contadorReservaciones === 8
+                  ? 'bg-danger cursor-normal'
+                  : ''
+              "
+            >
+              Hora: {{ horario.hora }} <br />
+              Reservaciones: {{ horario.contadorReservaciones }}
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
