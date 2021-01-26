@@ -21,4 +21,10 @@ export class UsuariosService {
     );
   }
 
+  updateHorarios(usuario: Usuario): Observable<Usuario> {
+    return this.http.put(`${this.endPoint}/updateHorarios`, usuario).pipe(
+      map(response => response as Usuario)
+    );
+  }
+
 }

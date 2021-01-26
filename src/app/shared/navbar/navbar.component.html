@@ -3,6 +3,6 @@
 
   <form class="form-inline">
     <a class="puntero text-white" (click)="cerrarSesion()">Salir</a>
-    <img [src]="authService.usuario?.foto" width="30" height="30" alt="">
+    <img [src]="authService.usuario?.foto | noimage" width="30" height="30" alt="">
   </form>
 </nav>

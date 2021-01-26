@@ -1,8 +1,24 @@
+<div class="alert alert-success mt-4 mb-4" role="alert">
+  <h4>
+    Hola! 
+    <span *ngIf="usuario.signUpWithGoogle">{{ usuario.email }}</span>
+    <span *ngIf="!usuario.signUpWithGoogle">{{ usuario.username }}</span>
+  </h4>
+</div>
+
 <div class="card">
   <div class="card-header bg-dark text-white">
     Seleccione El Horario Deseado
   </div>
-  <div class="card-body">
+
+  <!-- Spinner -->
+  <div class="spinner" *ngIf="cargando">
+    <fa-icon [icon]="faSpinner" [spin]="true" size="5x" class="text-primary"></fa-icon>
+  </div>
+  <!-- /Spinner -->
+
+  <!-- Card Body -->
+  <div class="card-body" [hidden]="cargando">
     <div class="table-responsive">
       <table class="table table-bordered">
         <tbody class="bg-info text-white">
@@ -94,4 +110,5 @@
       </table>
     </div>
   </div>
+  <!-- Card Body -->
 </div>

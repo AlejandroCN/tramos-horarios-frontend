@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
 import { HorariosComponent } from './horarios.component';
 import { HorariosRoutingModule } from './horarios-routing.module';
@@ -8,7 +9,8 @@ import { HorariosRoutingModule } from './horarios-routing.module';
   declarations: [HorariosComponent],
   imports: [
     CommonModule,
-    HorariosRoutingModule
+    HorariosRoutingModule,
+    FontAwesomeModule
   ]
 })
 export class HorariosModule { }

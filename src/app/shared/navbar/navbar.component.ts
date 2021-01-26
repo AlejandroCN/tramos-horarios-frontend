@@ -20,12 +20,9 @@ export class NavbarComponent implements OnInit {
     }).catch(error => console.log(error));
   }
 
-  cerrarSesion(): void {
-    this.authService.logout().then(() => {
-      this.authService.paginaInicio();
-      this.router.navigateByUrl('/auth/login');
-    });
-
+  async cerrarSesion(): Promise<any> {
+    await this.authService.logout();
+    this.router.navigateByUrl('/auth/login');
   }
 
 }

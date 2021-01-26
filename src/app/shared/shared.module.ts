@@ -1,13 +1,16 @@
 import { NgModule } from '@angular/core';
 
 import { NavbarComponent } from './navbar/navbar.component';
+import { NoimagePipe } from './pipes/noimage.pipe';
 
 @NgModule({
   declarations: [
-    NavbarComponent
+    NavbarComponent,
+    NoimagePipe
   ],
   exports: [
-    NavbarComponent
+    NavbarComponent,
+    NoimagePipe
   ]
 })
 export class SharedModule { }
