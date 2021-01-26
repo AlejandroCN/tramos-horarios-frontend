@@ -1,0 +1,135 @@
+<div class="limiter">
+  <div class="container-login100">
+    <div class="wrap-login100 p-t-50 p-b-90">
+      <form
+        [formGroup]="form"
+        novalidate=""
+        class="login100-form flex-sb flex-w"
+      >
+        <span class="login100-form-title p-b-51"> Registro </span>
+        <!-- Username -->
+        <div class="wrap-input100 m-b-16">
+          <input
+            autocomplete="off"
+            class="input100"
+            type="text"
+            placeholder="Nombre de usuario"
+            formControlName="username"
+          />
+          <span class="focus-input100"></span>
+        </div>
+        <!-- /Username -->
+        <!-- Errores -->
+        <div
+          class="text-danger mt-minus-15 mb-2"
+          *ngIf="
+            form.get('username').invalid &&
+            (this.form.get('username').touched ||
+              this.form.get('username').dirty)
+          "
+        >
+          <small *ngIf="form.get('username').hasError('required')">
+            Debe indicar su nombre de usuario
+          </small>
+          <small *ngIf="form.get('username').hasError('minlength')">
+            Ingrese al menos 3 caracteres
+          </small>
+          <small *ngIf="form.get('username').hasError('maxlength')">
+            Ingrese máximo 25 caracteres
+          </small>
+          <small *ngIf="form.get('username').hasError('pattern')">
+            Use solo letras y números
+          </small>
+        </div>
+        <!-- /Errores -->
+
+        <!-- Email -->
+        <div class="wrap-input100 m-b-16">
+          <input
+            autocomplete="off"
+            class="input100"
+            type="text"
+            placeholder="Correo electrónico"
+            formControlName="email"
+          />
+          <span class="focus-input100"></span>
+        </div>
+        <!-- /Email -->
+        <!-- Errores -->
+        <div
+          class="text-danger mt-minus-15 mb-2"
+          *ngIf="
+            form.get('email').invalid &&
+            (this.form.get('email').touched || this.form.get('email').dirty)
+          "
+        >
+          <small *ngIf="form.get('email').hasError('required')">
+            Debe indicar su correo electrónico
+          </small>
+          <small *ngIf="form.get('email').hasError('maxlength')">
+            Ingrese máximo 80 caracteres
+          </small>
+          <small *ngIf="form.get('email').hasError('pattern')">
+            El correo ingresado no es válido
+          </small>
+        </div>
+        <!-- /Errores -->
+
+        <!-- Password -->
+        <div class="wrap-input100 m-b-16">
+          <input
+            autocomplete="off"
+            class="input100"
+            type="password"
+            placeholder="Contraseña"
+            formControlName="password"
+          />
+          <span class="focus-input100"></span>
+        </div>
+        <!-- /Password -->
+        <!-- Errores -->
+        <div
+          class="text-danger mt-minus-15 mb-2"
+          *ngIf="
+            form.get('password').invalid &&
+            (this.form.get('password').touched ||
+              this.form.get('password').dirty)
+          "
+        >
+          <small *ngIf="form.get('password').hasError('required')">
+            Debe indicar su contraseña
+          </small>
+          <small *ngIf="form.get('password').hasError('minlength')">
+            Ingrese al menos 6 caracteres
+          </small>
+          <small *ngIf="form.get('password').hasError('maxlength')">
+            Ingrese máximo 10 caracteres
+          </small>
+          <small *ngIf="form.get('password').hasError('pattern')">
+            Use solo letras y números
+          </small>
+        </div>
+        <!-- /Errores -->
+
+        <div class="container-login100-form-btn m-t-17">
+          <button
+            (click)="registrar()"
+            class="login100-form-btn"
+            [disabled]="cargando"
+          >
+            <fa-icon
+              class="mr-3"
+              [icon]="cargando ? faSync : faKey"
+              [spin]="cargando"
+            ></fa-icon>
+            Registrarse
+          </button>
+
+          <label>
+            <a routerLink="/auth/login">¿Ya tienes cuenta? Ingresar</a>
+          </label>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

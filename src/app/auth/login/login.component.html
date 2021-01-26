@@ -1,2 +1,56 @@
-<div id="my-signin2"></div>
-<a (click)="signOut()">Sign out</a>
+<div class="limiter">
+  <div class="container-login100">
+    <div class="wrap-login100 p-t-50 p-b-90">
+      <form
+        [formGroup]="form"
+        novalidate=""
+        class="login100-form flex-sb flex-w"
+      >
+        <span class="login100-form-title p-b-51"> Iniciar Sesi&oacute;n </span>
+        <!-- Username -->
+        <div class="wrap-input100 m-b-16">
+          <input
+            autocomplete="off"
+            class="input100"
+            type="text"
+            placeholder="Nombre de usuario"
+            formControlName="username"
+          />
+          <span class="focus-input100"></span>
+        </div>
+        <!-- /Username -->
+
+        <!-- Password -->
+        <div class="wrap-input100 m-b-16">
+          <input
+            autocomplete="off"
+            class="input100"
+            type="password"
+            placeholder="Contraseña"
+            formControlName="password"
+          />
+          <span class="focus-input100"></span>
+        </div>
+        <!-- /Password -->
+
+        <div class="container-login100-form-btn m-t-17">
+          <button (click)="iniciarSesion()" class="login100-form-btn" [disabled]="cargando">
+            <fa-icon class="mr-3" [icon]="cargando ? faSync : faKey" [spin]="cargando"></fa-icon>
+            Entrar
+          </button>
+
+          <div id="gSignInWrapper" class="m-t-17">
+            <div id="customBtn" class="customGPlusSignIn">
+              <span class="icon"></span>
+              <span class="buttonText">Google</span>
+            </div>
+          </div>
+
+          <label>
+            <a routerLink="/auth/register">¿Eres Nuevo? Registrarse</a>
+          </label>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
