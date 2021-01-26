@@ -10,6 +10,7 @@ import { ValidationService } from '../../services/validation.service';
 import { UsuariosService } from '../../services/usuarios.service';
 
 import { Usuario } from 'src/app/models/usuario.model';
+import { Rol } from '../../models/rol.model';
 
 @Component({
   selector: 'app-register',

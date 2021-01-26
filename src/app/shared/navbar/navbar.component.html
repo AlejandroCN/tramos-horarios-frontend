@@ -1,3 +1,8 @@
-<nav class="navbar navbar-expand-sm navbar-dark bg-dark">
+<nav class="navbar navbar-dark bg-dark justify-content-between">
   <a class="navbar-brand" href="#">Tramos Horarios</a>
+
+  <form class="form-inline">
+    <a class="puntero text-white" (click)="cerrarSesion()">Salir</a>
+    <img [src]="authService.usuario?.foto" width="30" height="30" alt="">
+  </form>
 </nav>

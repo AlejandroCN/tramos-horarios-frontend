@@ -1,4 +1,8 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
+
+import { AuthService } from '../../services/auth.service';
+import { ScriptsService } from '../../services/scripts.service';
 
 @Component({
   selector: 'app-navbar',
@@ -7,9 +11,21 @@ import { Component, OnInit } from '@angular/core';
 })
 export class NavbarComponent implements OnInit {
 
-  constructor() { }
+  constructor(public authService: AuthService,
+              private scriptsService: ScriptsService,
+              private router: Router) { }
 
   ngOnInit(): void {
+    this.scriptsService.load('google-platform').then(() => {
+    }).catch(error => console.log(error));
+  }
+
+  cerrarSesion(): void {
+    this.authService.logout().then(() => {
+      this.authService.paginaInicio();
+      this.router.navigateByUrl('/auth/login');
+    });
+
   }
 
 }

@@ -1,13 +1,14 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, NgZone, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-
-import { ScriptsService } from '../../services/scripts.service';
-import { environment } from '../../../environments/environment';
+import Swal from 'sweetalert2';
 
 import { faKey } from '@fortawesome/free-solid-svg-icons';
 import { faSync } from '@fortawesome/free-solid-svg-icons';
 
-declare const gapi: any;
+import { ScriptsService } from '../../services/scripts.service';
+import { AuthService } from '../../services/auth.service';
+import { Usuario } from 'src/app/models/usuario.model';
+
 declare const document: any;
 
 @Component({
@@ -19,12 +20,13 @@ export class LoginComponent implements OnInit {
 
   public form: FormGroup;
   public cargando: boolean;
-  private auth2: any;
 
   public faKey = faKey;
   public faSync = faSync;
 
-  constructor(private scriptsService: ScriptsService) {
+  constructor(private scriptsService: ScriptsService,
+              private authService: AuthService,
+              private zone: NgZone) {
     this.cargando = false;
   }
 
@@ -43,43 +45,69 @@ export class LoginComponent implements OnInit {
   }
 
   iniciarSesion(): void {
-    this.cargando = true;
-
     this.form.markAllAsTouched();
-    setTimeout(() => this.cargando = false, 1200);
+    if (this.form.valid) {
+      this.cargando = true;
+
+      const usuario: Usuario = new Usuario();
+      usuario.username = this.form.get('username').value;
+      usuario.password = this.form.get('password').value;
+
+      this.authService.login(usuario).subscribe((resp: any) => {
+        this.authService.guardarDatosSesion(resp.token);
+        this.authService.paginaInicio();
+        this.cargando = false;
+      }, err => {
+        if (err.status === 404 || err.status === 500) {
+          Swal.fire('Error', err.error.mensaje, 'error');
+        } else if (err.status === 400) {
+          Swal.fire('Error de credenciales', 'Username o password incorrectos!', 'error');
+        }
+        this.cargando = false;
+        console.log(err);
+      });
+    } else {
+      Swal.fire({
+        icon: 'warning',
+        title: 'Atención',
+        text: 'Debe indicar su nombre de usuario y contraseña'
+      });
+    }
   }
 
   startApp(): void {
-    gapi.load('auth2', () => {
-      // Retrieve the singleton for the GoogleAuth library and set up the client.
-      this.auth2 = gapi.auth2.init({
-        client_id: environment.googleClientId,
-        cookiepolicy: 'single_host_origin'
-      });
-      this.attachSignin(document.getElementById('customBtn'));
+    this.authService.startUpGoogleSignIn().then((auth2: any) => {
+      this.attachSignin(document.getElementById('customBtn'), auth2);
     });
   }
 
-  attachSignin(element): void {
-    this.auth2.attachClickHandler(element, {},
+  attachSignin(element, auth2): void {
+    auth2.attachClickHandler(element, {},
         (googleUser) => this.onSuccess(googleUser),
         (error) => this.onFailure(error));
   }
 
   onSuccess(googleUser): void {
-    console.log('Logged in as: ' + googleUser.getBasicProfile().getName());
-    console.log(googleUser.getAuthResponse().id_token);
+    const tokenId = googleUser.getAuthResponse().id_token;
+    this.cargando = true;
+
+    this.authService.googleSignIn(tokenId).subscribe((resp: any) => {
+      this.authService.guardarDatosSesion(resp.token);
+      this.zone.run(() => this.authService.paginaInicio());
+      this.cargando = false;
+    }, err => {
+      if (err.status === 404 || err.status === 500) {
+        Swal.fire('Error', err.error.mensaje, 'error');
+      } else if (err.status === 400) {
+        Swal.fire('Error de credenciales', err.error.mensaje, 'error');
+      }
+      this.cargando = false;
+      console.log(err);
+    });
   }
 
   onFailure(error): void {
     console.log(error);
-  }
-
-  signOut(): void {
-    const auth2 = gapi.auth2.getAuthInstance();
-    auth2.signOut().then(() => {
-      console.log('User signed out.');
-    });
   }
 
 }
