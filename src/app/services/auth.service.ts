@@ -2,8 +2,8 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 
-import { map } from 'rxjs/operators';
-import { Observable } from 'rxjs';
+import { catchError, map, retry } from 'rxjs/operators';
+import { EMPTY, Observable } from 'rxjs';
 import Swal from 'sweetalert2';
 
 import { environment } from 'src/environments/environment';
@@ -96,6 +96,8 @@ export class AuthService {
     params.set('tokenId', googleTokenId);
 
     return this.http.post(`${this.endPoint}/googleSignIn/login`, params.toString(), {headers}).pipe(
+      retry(3),
+      catchError(() => EMPTY ),
       map(response => response as any)
     );
   }

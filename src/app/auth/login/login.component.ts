@@ -88,21 +88,23 @@ export class LoginComponent implements OnInit {
   }
 
   onSuccess(googleUser): void {
-    const tokenId = googleUser.getAuthResponse().id_token;
-    this.cargando = true;
+    this.zone.run(() => {
+      this.cargando = true;
+      const tokenId = googleUser.getAuthResponse().id_token;
 
-    this.authService.googleSignIn(tokenId).subscribe((resp: any) => {
-      this.authService.guardarDatosSesion(resp.token);
-      this.zone.run(() => this.authService.paginaInicio());
-      this.cargando = false;
-    }, err => {
-      if (err.status === 404 || err.status === 500) {
-        Swal.fire('Error', err.error.mensaje, 'error');
-      } else if (err.status === 400) {
-        Swal.fire('Error de credenciales', err.error.mensaje, 'error');
-      }
-      this.cargando = false;
-      console.log(err);
+      this.authService.googleSignIn(tokenId).subscribe((resp: any) => {
+        this.authService.guardarDatosSesion(resp.token);
+        this.authService.paginaInicio();
+        this.cargando = false;
+      }, err => {
+        if (err.status === 404 || err.status === 500) {
+          Swal.fire('Error', err.error.mensaje, 'error');
+        } else if (err.status === 400) {
+          Swal.fire('Error de credenciales', err.error.mensaje, 'error');
+        }
+        this.cargando = false;
+        console.log(err);
+      });
     });
   }
 
