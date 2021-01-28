@@ -35,7 +35,9 @@
               "
             >
               Hora: {{ horario.hora }} <br />
-              Reservaciones: {{ horario.contadorReservaciones }}
+              Reservaciones:
+              <span *ngIf="!horario.actualizando">{{ horario.contadorReservaciones }}</span>
+              <span *ngIf="horario.actualizando">Procesando ...</span>
             </td>
           </tr>
 
@@ -52,7 +54,9 @@
               "
             >
               Hora: {{ horario.hora }} <br />
-              Reservaciones: {{ horario.contadorReservaciones }}
+              Reservaciones:
+              <span *ngIf="!horario.actualizando">{{ horario.contadorReservaciones }}</span>
+              <span *ngIf="horario.actualizando">Procesando ...</span>
             </td>
           </tr>
 
@@ -69,7 +73,9 @@
               "
             >
               Hora: {{ horario.hora }} <br />
-              Reservaciones: {{ horario.contadorReservaciones }}
+              Reservaciones:
+              <span *ngIf="!horario.actualizando">{{ horario.contadorReservaciones }}</span>
+              <span *ngIf="horario.actualizando">Procesando ...</span>
             </td>
           </tr>
 
@@ -86,7 +92,9 @@
               "
             >
               Hora: {{ horario.hora }} <br />
-              Reservaciones: {{ horario.contadorReservaciones }}
+              Reservaciones:
+              <span *ngIf="!horario.actualizando">{{ horario.contadorReservaciones }}</span>
+              <span *ngIf="horario.actualizando">Procesando ...</span>
             </td>
           </tr>
 
@@ -103,7 +111,9 @@
               "
             >
               Hora: {{ horario.hora }} <br />
-              Reservaciones: {{ horario.contadorReservaciones }}
+              Reservaciones:
+              <span *ngIf="!horario.actualizando">{{ horario.contadorReservaciones }}</span>
+              <span *ngIf="horario.actualizando">Procesando ...</span>
             </td>
           </tr>
         </tbody>

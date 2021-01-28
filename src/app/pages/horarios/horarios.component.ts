@@ -83,13 +83,16 @@ export class HorariosComponent implements OnInit, OnDestroy {
   actualizarContadorHorario(horarioActualizado: Horario): void {
     const horarioExistente = this.horarios.find(h => h.id === horarioActualizado.id);
     horarioExistente.contadorReservaciones = horarioActualizado.contadorReservaciones;
+
+    horarioExistente.actualizando = false;
+    horarioExistente.seleccionado = !horarioExistente.seleccionado;
   }
 
   seleccionarHorario(horario: Horario): void {
-    if (horario.contadorReservaciones < 8 || horario.seleccionado) {
-      horario.seleccionado = !horario.seleccionado;
+    if ((horario.contadorReservaciones < 8 || horario.seleccionado) && !horario.actualizando) {
+      horario.actualizando = true;
 
-      if (horario.seleccionado) {
+      if (!horario.seleccionado) {
         this.reservarHorario(horario);
       } else {
         this.liberarHorario(horario);

@@ -4,5 +4,6 @@ export class Horario {
   hora: number;
   contadorReservaciones: number;
   seleccionado?: boolean;
+  actualizando?: boolean;
 
 }
