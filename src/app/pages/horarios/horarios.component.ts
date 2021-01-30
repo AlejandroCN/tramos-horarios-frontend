@@ -50,11 +50,15 @@ export class HorariosComponent implements OnInit, OnDestroy {
       console.log('ws connected');
       this.clientSocket.subscribe('/realtime/cambioHorarios', (resp) => {
         const cambioHorario = JSON.parse(resp.body) as CambioHorario;
-        this.actualizarContadorHorario(cambioHorario.horarioAModificar);
+        if (cambioHorario.error) {
+          console.log(cambioHorario.mensaje);
+        } else {
+          this.actualizarContadorHorario(cambioHorario.horarioAModificar);
 
-        if (cambioHorario.usuario.id === this.authService.usuario.id) {
-          this.authService.usuario = cambioHorario.usuario;
-          this.marcarHorariosSeleccionados();
+          if (cambioHorario.usuario.id === this.authService.usuario.id) {
+            this.actualizarHorarioModificado(cambioHorario);
+            this.marcarHorariosSeleccionados();
+          }
         }
       });
     };
@@ -70,6 +74,13 @@ export class HorariosComponent implements OnInit, OnDestroy {
     });
   }
 
+  actualizarHorarioModificado(cambioHorario: CambioHorario): void {
+    this.authService.usuario = cambioHorario.usuario;
+    const horarioExistente = this.horarios.find(h => h.id === cambioHorario.horarioAModificar.id);
+    horarioExistente.actualizando = false;
+    horarioExistente.seleccionado = !horarioExistente.seleccionado;
+  }
+
   marcarHorariosSeleccionados(): void {
     this.horarios.forEach(horario => {
       if (this.authService.usuario.horarios.find(horarioSelec => horarioSelec.id === horario.id)) {
@@ -83,45 +94,21 @@ export class HorariosComponent implements OnInit, OnDestroy {
   actualizarContadorHorario(horarioActualizado: Horario): void {
     const horarioExistente = this.horarios.find(h => h.id === horarioActualizado.id);
     horarioExistente.contadorReservaciones = horarioActualizado.contadorReservaciones;
-
-    horarioExistente.actualizando = false;
-    horarioExistente.seleccionado = !horarioExistente.seleccionado;
   }
 
   seleccionarHorario(horario: Horario): void {
     if ((horario.contadorReservaciones < 8 || horario.seleccionado) && !horario.actualizando) {
       horario.actualizando = true;
 
-      if (!horario.seleccionado) {
-        this.reservarHorario(horario);
-      } else {
-        this.liberarHorario(horario);
-      }
+      const cambioHorario: CambioHorario = {
+        usuario: this.authService.usuario,
+        horarioAModificar: horario
+      };
+      this.clientSocket.publish({
+        destination: '/app/seleccionarHorario',
+        body: JSON.stringify(cambioHorario)
+      });
     }
-  }
-
-  reservarHorario(horario: Horario): void {
-    const cambioHorario: CambioHorario = {
-      usuario: this.authService.usuario,
-      horarioAModificar: horario
-    };
-
-    this.clientSocket.publish({
-      destination: '/app/reservarHorario',
-      body: JSON.stringify(cambioHorario)
-    });
-  }
-
-  liberarHorario(horario: Horario): void {
-    const cambioHorario: CambioHorario = {
-      usuario: this.authService.usuario,
-      horarioAModificar: horario
-    };
-
-    this.clientSocket.publish({
-      destination: '/app/liberarHorario',
-      body: JSON.stringify(cambioHorario)
-    });
   }
 
 }
