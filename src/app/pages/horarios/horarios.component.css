@@ -1,7 +1,33 @@
-td {
+tr:hover:not(.mat-header-row, .not-selectable) {
   cursor: pointer;
+  transition: linear 0.3s;
+  transform: scale(1.02);
+  background-color: #d1ecf1 !important;
 }
 
-.cursor-normal {
-  cursor: default;
+.row-selected {
+  background-color: #d4edda;
+}
+
+.not-selectable {
+  background-color: #f8d7da;
+  cursor: default !important;
+}
+
+th {
+  font-size: 18px;
+}
+
+td, tr {
+  font-size: 16px;
+}
+
+div.muestra-color {
+  width: 80px;
+  height: 30px;
+  min-width: 30px;
+}
+
+th.mat-header-cell {
+  text-align: center !important;
 }

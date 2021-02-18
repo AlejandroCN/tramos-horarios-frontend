@@ -1,6 +1,9 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { MatCardModule } from '@angular/material/card';
+import { MatTableModule } from '@angular/material/table';
+import { MatPaginatorModule } from '@angular/material/paginator';
 
 import { HorariosComponent } from './horarios.component';
 import { HorariosRoutingModule } from './horarios-routing.module';
@@ -9,8 +12,11 @@ import { HorariosRoutingModule } from './horarios-routing.module';
   declarations: [HorariosComponent],
   imports: [
     CommonModule,
+    FontAwesomeModule,
+    MatCardModule,
+    MatTableModule,
+    MatPaginatorModule,
     HorariosRoutingModule,
-    FontAwesomeModule
-  ]
+  ],
 })
-export class HorariosModule { }
+export class HorariosModule {}

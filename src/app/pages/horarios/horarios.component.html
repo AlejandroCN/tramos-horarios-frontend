@@ -1,124 +1,57 @@
-<div class="alert alert-success mt-4 mb-4" role="alert">
-  <h4>
-    Hola! 
-    <span *ngIf="usuario.signUpWithGoogle">{{ usuario.email }}</span>
-    <span *ngIf="!usuario.signUpWithGoogle">{{ usuario.username }}</span>
-  </h4>
+<div class="alert alert-info">
+  <fa-icon [icon]="faHome"></fa-icon>
+  Bienvenido
+  <span *ngIf="usuario.signUpWithGoogle">{{ usuario.email }}</span>
+  <span *ngIf="!usuario.signUpWithGoogle"
+    ><strong>{{ usuario.username }}</strong></span
+  >
 </div>
 
-<div class="card">
-  <div class="card-header bg-dark text-white">
-    Seleccione El Horario Deseado
-  </div>
+<mat-card>
+  <mat-card-header>
+    <mat-card-title>Horarios Disponibles</mat-card-title>
+    <mat-card-subtitle>Seleccione sus horarios de comida</mat-card-subtitle>
+  </mat-card-header>
 
-  <!-- Spinner -->
-  <div class="spinner" *ngIf="cargando">
-    <fa-icon [icon]="faSpinner" [spin]="true" size="5x" class="text-primary"></fa-icon>
-  </div>
-  <!-- /Spinner -->
+  <mat-card-content class="w-100 d-flex justify-content-center">
+    <div class="w-75">
+      <table mat-table [dataSource]="dataSource" class="w-100 text-center">
+        <!-- Hora Column -->
+        <ng-container matColumnDef="hora">
+          <th class="w-50" mat-header-cell *matHeaderCellDef>Hora</th>
+          <td mat-cell *matCellDef="let element">{{element.hora}}</td>
+        </ng-container>
 
-  <!-- Card Body -->
-  <div class="card-body" [hidden]="cargando">
-    <div class="table-responsive">
-      <table class="table table-bordered">
-        <tbody class="bg-info text-white">
-          <tr>
-            <td
-              *ngFor="let horario of horarios | slice: 0:5"
-              (click)="seleccionarHorario(horario)"
-              [class]="
-                horario.seleccionado
-                  ? 'bg-success'
-                  : horario.contadorReservaciones === 8
-                  ? 'bg-danger cursor-normal'
+        <!-- #Motociclistas Column -->
+        <ng-container matColumnDef="contadorReservaciones">
+          <th mat-header-cell *matHeaderCellDef># Motociclistas Reservados</th>
+          <td mat-cell *matCellDef="let element">
+            <span *ngIf="!element.actualizando">{{element.contadorReservaciones}}</span>
+            <span *ngIf="element.actualizando">
+              <fa-icon [icon]="faSpinner" [spin]="true"></fa-icon>
+            </span>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr
+          (click)="seleccionarHorario(row)"
+          [class]="
+                row.seleccionado
+                  ? 'row-selected'
+                  : row.contadorReservaciones === 8
+                  ? 'not-selectable'
                   : ''
               "
-            >
-              Hora: {{ horario.hora }} <br />
-              Reservaciones:
-              <span *ngIf="!horario.actualizando">{{ horario.contadorReservaciones }}</span>
-              <span *ngIf="horario.actualizando">Procesando ...</span>
-            </td>
-          </tr>
-
-          <tr>
-            <td
-              *ngFor="let horario of horarios | slice: 5:10"
-              (click)="seleccionarHorario(horario)"
-              [class]="
-                horario.seleccionado
-                  ? 'bg-success'
-                  : horario.contadorReservaciones === 8
-                  ? 'bg-danger cursor-normal'
-                  : ''
-              "
-            >
-              Hora: {{ horario.hora }} <br />
-              Reservaciones:
-              <span *ngIf="!horario.actualizando">{{ horario.contadorReservaciones }}</span>
-              <span *ngIf="horario.actualizando">Procesando ...</span>
-            </td>
-          </tr>
-
-          <tr>
-            <td
-              *ngFor="let horario of horarios | slice: 10:15"
-              (click)="seleccionarHorario(horario)"
-              [class]="
-                horario.seleccionado
-                  ? 'bg-success'
-                  : horario.contadorReservaciones === 8
-                  ? 'bg-danger cursor-normal'
-                  : ''
-              "
-            >
-              Hora: {{ horario.hora }} <br />
-              Reservaciones:
-              <span *ngIf="!horario.actualizando">{{ horario.contadorReservaciones }}</span>
-              <span *ngIf="horario.actualizando">Procesando ...</span>
-            </td>
-          </tr>
-
-          <tr>
-            <td
-              *ngFor="let horario of horarios | slice: 15:20"
-              (click)="seleccionarHorario(horario)"
-              [class]="
-                horario.seleccionado
-                  ? 'bg-success'
-                  : horario.contadorReservaciones === 8
-                  ? 'bg-danger cursor-normal'
-                  : ''
-              "
-            >
-              Hora: {{ horario.hora }} <br />
-              Reservaciones:
-              <span *ngIf="!horario.actualizando">{{ horario.contadorReservaciones }}</span>
-              <span *ngIf="horario.actualizando">Procesando ...</span>
-            </td>
-          </tr>
-
-          <tr>
-            <td
-              *ngFor="let horario of horarios | slice: 20:25"
-              (click)="seleccionarHorario(horario)"
-              [class]="
-                horario.seleccionado
-                  ? 'bg-success'
-                  : horario.contadorReservaciones === 8
-                  ? 'bg-danger cursor-normal'
-                  : ''
-              "
-            >
-              Hora: {{ horario.hora }} <br />
-              Reservaciones:
-              <span *ngIf="!horario.actualizando">{{ horario.contadorReservaciones }}</span>
-              <span *ngIf="horario.actualizando">Procesando ...</span>
-            </td>
-          </tr>
-        </tbody>
+          mat-row
+          *matRowDef="let row; columns: displayedColumns;"
+        ></tr>
       </table>
+      <mat-paginator
+        [pageSizeOptions]="[5, 10, 20]"
+        showFirstLastButtons
+      ></mat-paginator>
     </div>
-  </div>
-  <!-- Card Body -->
-</div>
+  </mat-card-content>
+</mat-card>
+
