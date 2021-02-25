@@ -27,10 +27,6 @@ export class HorariosComponent implements OnInit, OnDestroy {
   public usuario: Usuario;
   public cargando: boolean;
 
-  // parametros de paginacion para la tabla de horarios
-  public numPag: number;
-  public tamPag: number;
-
   public displayedColumns: string[] = ['hora', 'contadorReservaciones'];
   public dataSource: MatTableDataSource<Horario> = null;
 
@@ -43,8 +39,6 @@ export class HorariosComponent implements OnInit, OnDestroy {
   ) {
     this.usuario = this.authService.usuario;
     this.cargando = true;
-    this.numPag = 1;
-    this.tamPag = 5;
   }
 
   ngOnInit(): void {
@@ -56,42 +50,7 @@ export class HorariosComponent implements OnInit, OnDestroy {
     this.clientSocket.deactivate();
   }
 
-  private initMatTable(): void {
-    this.dataSource = new MatTableDataSource<Horario>(this.horarios);
-    this.dataSource.paginator = this.paginator;
-
-    this.table.renderRows();
-  }
-
-  configurarSocket(): void {
-    this.clientSocket = new Client();
-    this.clientSocket.webSocketFactory = () => {
-      return new SockJS(`${environment.apiUrl}/ws`) as IStompSocket;
-    };
-
-    this.clientSocket.onConnect = () => {
-      console.log('ws connected');
-      this.clientSocket.subscribe('/realtime/cambioHorarios', (resp) => {
-        setTimeout(() => {
-          const cambioHorario = JSON.parse(resp.body) as CambioHorario;
-          if (cambioHorario.error) {
-            console.log(cambioHorario.mensaje);
-          } else {
-            this.actualizarContadorHorario(cambioHorario.horarioAModificar);
-
-            if (cambioHorario.usuario.id === this.authService.usuario.id) {
-              this.actualizarHorarioModificado(cambioHorario);
-              this.marcarHorariosSeleccionados();
-            }
-          }
-        }, 1200);
-      });
-    };
-
-    this.clientSocket.activate();
-  }
-
-  obtenerHorarios(): void {
+  private obtenerHorarios(): void {
     this.horariosService.findAll().subscribe((horarios) => {
       this.horarios = horarios;
       this.marcarHorariosSeleccionados();
@@ -100,7 +59,51 @@ export class HorariosComponent implements OnInit, OnDestroy {
     });
   }
 
-  actualizarHorarioModificado(cambioHorario: CambioHorario): void {
+  private configurarSocket(): void {
+    this.clientSocket = new Client();
+    this.clientSocket.webSocketFactory = () => {
+      return new SockJS(`${environment.apiUrl}/ws`) as IStompSocket;
+    };
+
+    this.clientSocket.onConnect = () => {
+      console.log('ws connected');
+      this.clientSocket.subscribe('/realtime/cambioHorarios', (message) => this.messageHandler(message));
+    };
+    this.clientSocket.activate();
+  }
+
+  private messageHandler(resp: any) {
+    setTimeout(() => {
+      const cambioHorario = JSON.parse(resp.body) as CambioHorario;
+      if (cambioHorario.error) {
+        console.log(cambioHorario.mensaje);
+      } else {
+        this.actualizarContadorHorario(cambioHorario.horarioAModificar);
+
+        if (cambioHorario.usuario.id === this.authService.usuario.id) {
+          this.actualizarHorarioModificado(cambioHorario);
+          this.marcarHorariosSeleccionados();
+        }
+      }
+    }, 1200);
+  }
+
+  private initMatTable(): void {
+    this.dataSource = new MatTableDataSource<Horario>(this.horarios);
+    this.dataSource.paginator = this.paginator;
+
+    this.table.renderRows();
+  }
+
+  private actualizarContadorHorario(horarioActualizado: Horario): void {
+    const horarioExistente = this.horarios.find(
+      (h) => h.id === horarioActualizado.id
+    );
+    horarioExistente.contadorReservaciones =
+      horarioActualizado.contadorReservaciones;
+  }
+
+  private actualizarHorarioModificado(cambioHorario: CambioHorario): void {
     this.authService.usuario = cambioHorario.usuario;
     const horarioExistente = this.horarios.find(
       (h) => h.id === cambioHorario.horarioAModificar.id
@@ -109,7 +112,7 @@ export class HorariosComponent implements OnInit, OnDestroy {
     horarioExistente.seleccionado = !horarioExistente.seleccionado;
   }
 
-  marcarHorariosSeleccionados(): void {
+  private marcarHorariosSeleccionados(): void {
     this.horarios.forEach((horario) => {
       if (
         this.authService.usuario.horarios.find(
@@ -123,15 +126,7 @@ export class HorariosComponent implements OnInit, OnDestroy {
     });
   }
 
-  actualizarContadorHorario(horarioActualizado: Horario): void {
-    const horarioExistente = this.horarios.find(
-      (h) => h.id === horarioActualizado.id
-    );
-    horarioExistente.contadorReservaciones =
-      horarioActualizado.contadorReservaciones;
-  }
-
-  seleccionarHorario(horario: Horario): void {
+  public seleccionarHorario(horario: Horario): void {
     if (
       (horario.contadorReservaciones < 8 || horario.seleccionado) &&
       !horario.actualizando
