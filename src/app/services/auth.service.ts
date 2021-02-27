@@ -103,12 +103,12 @@ export class AuthService {
   }
 
   async logout(): Promise<any> {
-    if (this.usuario.signUpWithGoogle) {
+    /*if (this.usuario.signUpWithGoogle) {
       const auth2 = await this.startUpGoogleSignIn();
       auth2.signOut().then(() => {
         console.log('Google user signed out.');
       });
-    }
+    }*/
     this._rol = null;
     this._token = null;
     this._usuario = null;
@@ -178,8 +178,8 @@ export class AuthService {
     }
   }
 
-  errorDeAutenticacion(): void {
-    this.logout();
+  async errorDeAutenticacion(): Promise<void> {
+    await this.logout();
     this.router.navigate(['/auth/login']);
     Swal.fire({
       icon: 'error',

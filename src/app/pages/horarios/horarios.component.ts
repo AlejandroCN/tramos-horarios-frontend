@@ -51,12 +51,20 @@ export class HorariosComponent implements OnInit, OnDestroy {
   }
 
   private obtenerHorarios(): void {
-    this.horariosService.findAll().subscribe((horarios) => {
-      this.horarios = horarios;
-      this.marcarHorariosSeleccionados();
-      this.initMatTable();
-      this.cargando = false;
-    });
+    this.horariosService.findAll().subscribe(
+      (horarios) => {
+        this.horarios = horarios;
+        this.marcarHorariosSeleccionados();
+        this.initMatTable();
+        this.cargando = false;
+      },
+      (err) => {
+        if (err.status === 401 || err.status === 403) {
+          this.authService.errorDeAutenticacion();
+        }
+        this.cargando = false;
+      }
+    );
   }
 
   private configurarSocket(): void {
@@ -67,25 +75,25 @@ export class HorariosComponent implements OnInit, OnDestroy {
 
     this.clientSocket.onConnect = () => {
       console.log('ws connected');
-      this.clientSocket.subscribe('/realtime/cambioHorarios', (message) => this.messageHandler(message));
+      this.clientSocket.subscribe('/realtime/cambioHorarios', (message) =>
+        this.messageHandler(message)
+      );
     };
     this.clientSocket.activate();
   }
 
   private messageHandler(resp: any) {
-    setTimeout(() => {
-      const cambioHorario = JSON.parse(resp.body) as CambioHorario;
-      if (cambioHorario.error) {
-        console.log(cambioHorario.mensaje);
-      } else {
-        this.actualizarContadorHorario(cambioHorario.horarioAModificar);
+    const cambioHorario = JSON.parse(resp.body) as CambioHorario;
+    if (cambioHorario.error) {
+      console.log(cambioHorario.mensaje);
+    } else {
+      this.actualizarContadorHorario(cambioHorario.horarioAModificar);
 
-        if (cambioHorario.usuario.id === this.authService.usuario.id) {
-          this.actualizarHorarioModificado(cambioHorario);
-          this.marcarHorariosSeleccionados();
-        }
+      if (cambioHorario.usuario.id === this.authService.usuario.id) {
+        this.actualizarHorarioModificado(cambioHorario);
+        this.marcarHorariosSeleccionados();
       }
-    }, 1200);
+    }
   }
 
   private initMatTable(): void {

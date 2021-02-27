@@ -1,27 +1,40 @@
-# TramosHorarios
+# Tramos Horarios
+Tramos horarios es una aplicación que muestra la comunicación en tiempo real entre usuarios mediante mensajes STOMP.
+Autenticate para seleccionar los horarios de interés que van desde las 8 a las 20 hrs en intervalos de 30 minutos, cada horario cuenta con una disponiblidad máxima de 8 reservaciones.
+## Comenzando 🚀
+La aplicación usa Google Sing In como uno de los métodos de autenticación, por lo que deberás crear una aplicación de Google Sign In y registrar tu Client Id en el archivo src/environments/google.environment.ts, dentro de tal archivo agrega la siguiente configuración:
+```
+export const googleSignIn = {
+  googleClientId: 'tu-client-id-aqui'
+}
+```
+En el archivo src/environmets/environment.ts coloca la el endpoint base de la api en ambiente de desarrollo como se muestra aquí:
+```
+export const environment = {
+  production: false,
+  apiUrl: 'http://baseUrl.ejemplo:8080',
+  ...googleSignIn,
+};
+```
+### Pre-requisitos 📋
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 11.0.4.
+* [Node JS](https://nodejs.org/en/)
+* [Angular CLI](https://cli.angular.io)
+### Instalación 🔧
+En la raíz del proyecto:
+```
+ng serve -o
+```
+Para levantar la aplicación en la dirección por defecto: http://localhost:4200
+## Despliegue 📦
+Agrega la url del servidor en producción al archivo src/environments/environment.prod.ts
+En la raíz del proyecto ejecuta:
+```
+ng build --prod
+```
+Los archivos estáticos para desplegar a tu servidor se generarán en el directorio dist/tramos-horarios/
 
-## Development server
+## Construido con 🛠️
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
-
-## Code scaffolding
-
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
-
-## Build
-
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `--prod` flag for a production build.
-
-## Running unit tests
-
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
-
-## Running end-to-end tests
-
-Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protractortest.org/).
-
-## Further help
-
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+* [Angular 11](https://cli.angular.io) - El framework web usado para frontend
+* [Node Package Manager](https://nodejs.org/en/) - Manejador de dependencias
