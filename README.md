@@ -1,6 +1,8 @@
 # Tramos Horarios
 Tramos horarios es una aplicación que muestra la comunicación en tiempo real entre usuarios mediante mensajes STOMP.
 Autenticate para seleccionar los horarios de interés que van desde las 8 a las 20 hrs en intervalos de 30 minutos, cada horario cuenta con una disponiblidad máxima de 8 reservaciones.
+
+Esta es la parte frontend que consume datos desde una API que puedes consultar [aquí](https://github.com/AlejandroCN/tramos-horarios-backend "aquí").
 ## Comenzando 🚀
 La aplicación usa Google Sing In como uno de los métodos de autenticación, por lo que deberás crear una aplicación de Google Sign In y registrar tu Client Id en el archivo src/environments/google.environment.ts, dentro de tal archivo agrega la siguiente configuración:
 ```
